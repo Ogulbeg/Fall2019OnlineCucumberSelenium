@@ -21,13 +21,21 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public abstract class AbstractPageBase {
     protected WebDriver driver = Driver.getDriver();
-    protected WebDriverWait wait = new WebDriverWait(driver,15);
+    protected WebDriverWait wait = new WebDriverWait(driver, 25);
 
     @FindBy(css = "#user-menu > a")
     protected WebElement currentUser;
 
+    @FindBy(css = "[class='btn-group pull-right'] > button")
+    protected WebElement saveAndClose;
+
     public AbstractPageBase() {
         PageFactory.initElements(driver, this);
+    }
+
+    public void clickOnSaveAndClose() {
+        BrowserUtilities.wait(3);
+        wait.until(ExpectedConditions.elementToBeClickable(saveAndClose)).click();
     }
 
     public String getCurrentUserName(){
@@ -35,8 +43,6 @@ public abstract class AbstractPageBase {
         wait.until(ExpectedConditions.visibilityOf(currentUser));
         return currentUser.getText().trim();
     }
-
-
 
 
     /**
@@ -60,7 +66,7 @@ public abstract class AbstractPageBase {
                 click(moduleElement).
                 build().perform();
 
+        //increase this wait rime if still failing
         BrowserUtilities.wait(4);
-
     }
 }
