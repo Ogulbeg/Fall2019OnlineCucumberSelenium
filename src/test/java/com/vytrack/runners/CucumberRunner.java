@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
         //dryRun=true  checking if every test has code implementation, otherwise cucumber wil create it
         dryRun = false, // execute test
         strict = false,
-        tags = " @create_car", // for skipping this method "@driver" for running only this method
+        tags = "@create_car_ddt", // for skipping this method "@driver" for running only this method
 //it will run one which execute but if we have both it will run both
         plugin = {
                 "html:target/default-report",

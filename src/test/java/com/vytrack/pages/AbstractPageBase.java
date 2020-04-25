@@ -36,6 +36,7 @@ public abstract class AbstractPageBase {
     public void clickOnSaveAndClose() {
         BrowserUtilities.wait(3);
         wait.until(ExpectedConditions.elementToBeClickable(saveAndClose)).click();
+        waitForLoaderMask();
     }
 
     public String getCurrentUserName(){
@@ -68,5 +69,14 @@ public abstract class AbstractPageBase {
 
         //increase this wait rime if still failing
         BrowserUtilities.wait(4);
+        waitForLoaderMask();
+
+    }
+    /**
+     * this method will be used to wait that terrible mask(spinning wheel) will be gone
+     * if loader mask is present, website is loading some data and you cannot perform any operations
+     */
+    public void waitForLoaderMask(){
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("[class*='loader-mask']")));
     }
 }
