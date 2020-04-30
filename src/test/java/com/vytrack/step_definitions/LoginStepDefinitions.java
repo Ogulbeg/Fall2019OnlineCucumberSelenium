@@ -15,7 +15,13 @@ public class LoginStepDefinitions {
     @Given("user is on the login page")
     public void user_is_on_the_login_page() {
         System.out.println("Open login page");
-        String URL = ConfigurationReader.getProperty("qa1");
+        // -Denv=qa1, -Denv=qa2, -Denv=qa3
+        String env = "qa2";
+        if (System.getProperty("env") != null) {
+            env = System.getProperty("env");
+        }
+        String URL = ConfigurationReader.getProperty(env);
+        System.out.println("URL :: " + URL);
         Driver.getDriver().get(URL);
     }
 
@@ -35,9 +41,8 @@ public class LoginStepDefinitions {
     public void user_should_verify_that_title_is_a_Dashboard() {
         System.out.println("Verify that title is a Dashboard");
         BrowserUtilities.waitForPageToLoad(10);
-        BrowserUtilities.waitForPageToLoad(2);
+        BrowserUtilities.wait(2);
         Assert.assertEquals("Dashboard", Driver.getDriver().getTitle());
-
     }
 
     @When("user logs in as a driver")
@@ -46,7 +51,7 @@ public class LoginStepDefinitions {
         loginPage.login("user19", "UserUser123");
     }
 
-    // When user enters "storemanager85" username and "UserUser123" password
+    //    When user enters "storemanager85" username and "UserUser123" password
     @When("user enters {string} username and {string} password")
     public void user_enters_username_and_password(String string, String string2) {
         System.out.printf("Login with user name %s and %s password\n", string, string2);
@@ -57,7 +62,6 @@ public class LoginStepDefinitions {
     public void user_navigates_to_and(String tab, String module) {
         System.out.printf("User clicks on the %s tab and navigates to %s module\n", tab, module);
         loginPage.navigateTo(tab, module);
-
     }
 
     @Then("user name should be {string}")
@@ -76,5 +80,4 @@ public class LoginStepDefinitions {
         System.out.println("Verify that page title is: " + string);
         Assert.assertEquals(string, Driver.getDriver().getTitle());
     }
-
 }
