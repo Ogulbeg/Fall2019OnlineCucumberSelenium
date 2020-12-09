@@ -1,14 +1,25 @@
 package com.vytrack.utilities;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class Driver {
     //same for everyone
     private static ThreadLocal<WebDriver> driverPool = new ThreadLocal<>();
+    private static ChromeOptions chromeOptions;
+    private static FirefoxOptions firefoxOptions;
+    private static URL url;
 
     //so no one can create object of Driver class
     //everyone should call static getter method instead
@@ -37,9 +48,37 @@ public class Driver {
             switch (browser) {
                 case "chrome":
                     WebDriverManager.chromedriver().setup();
-                    ChromeOptions chromeOptions = new ChromeOptions();
+                    chromeOptions = new ChromeOptions();
                     chromeOptions.addArguments("--start-maximized");
                     driverPool.set(new ChromeDriver(chromeOptions));
+                    break;
+                case "remote-chrome":
+                    //we create object of URL and specify
+                    //selenium grid hub as a parameter
+                    //make sure it ends with /wd/hub
+                    chromeOptions = new ChromeOptions();
+                    try {
+                        URL url = new URL("http://3.82.194.66:4444/wd/hub");
+
+                        DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
+                        desiredCapabilities.setBrowserName(BrowserType.CHROME);
+                        desiredCapabilities.setPlatform(Platform.ANY);
+                        //desiredCapabilities used to specify what kind of node
+                        //is required for testing
+                        //such as: OS type, browser, version, etc...
+                        driverPool.set(new RemoteWebDriver(url,desiredCapabilities));
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "remote-firefox":
+                    firefoxOptions = new FirefoxOptions();
+                    try {
+                        URL url = new URL("http://52.23.164.151:4444/wd/hub");
+                        driverPool.set(new RemoteWebDriver(url,firefoxOptions));
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case "chromeheadless":
                     //to run chrome without interface (headless mode)
@@ -78,6 +117,7 @@ public class Driver {
                     chromeOptions.addArguments("--start-maximized");
                     driverPool.set(new ChromeDriver(chromeOptions));
                     break;
+
                 case "chromeheadless":
                     //to run chrome without interface (headless mode)
                     WebDriverManager.chromedriver().version("79").setup();

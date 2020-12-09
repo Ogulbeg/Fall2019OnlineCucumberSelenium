@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
         //dryRun=true  checking if every test has code implementation, otherwise cucumber wil create it
         dryRun = false, // execute test
         strict = false,
-        tags = "@view_calendar_events", // for skipping this method "@driver" for running only this method
+        tags = "@sales_manager", // for skipping this method "@driver" for running only this method
 //it will run one which execute but if we have both it will run both
         plugin = {
                 "html:target/default-report",
